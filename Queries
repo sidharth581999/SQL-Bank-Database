@@ -1,0 +1,48 @@
+-- count toal no of customer
+
+select count(*) from CUSTOMER_INFO;
+
+-- COUNT THE CUSTOMERS GENDER
+
+SELECT GENDER,COUNT(GENDER) FROM CUSTOMER_INFO GROUP BY GENDER;
+
+-- MOST SUBMITTED ID TYPE
+
+SELECT ID_TYPE,COUNT(ID_TYPE) FROM CUSTOMER_INFO GROUP BY ID_TYPE
+ORDER BY COUNT(ID_TYPE) DESC LIMIT 1 ;
+
+-- WHICH TYPE RELATIONS ARE USED BY CUATOMERS AS A REFERAL
+
+SELECT RELATION,COUNT(RELATION) FROM CUSTOMER_REFERANCE_INFO GROUP BY RELATION 
+ORDER BY COUNT(RELATION) DESC LIMIT 1;
+
+-- AVERAGE ACTIVATION TIME
+
+select  round(avg(datediff(ACTIVATION_DATE,REGESTRATION_DATE)),2) as days from account_info;
+
+-- AVERAGE ACTIVATION TIME of different banks 
+
+select  ifsc_code,round(avg(datediff(ACTIVATION_DATE,REGESTRATION_DATE)),2) as days from account_info group by ifsc_code;
+
+select  account_info.ifsc_code,bank_info.bank_name,round(avg(datediff(ACTIVATION_DATE,REGESTRATION_DATE)),2) as days 
+from account_info 
+join bank_info;
+
+select account_info.ifsc_code,round(avg(datediff(ACTIVATION_DATE,REGESTRATION_DATE)),2),bank_info.bank_name from account_info
+left join bank_info on account_info.ifsc_code = bank_info.ifsc_code group by ifsc_code;
+
+-- get customer name,id and referant name
+
+select customer_info.customer_id,customer_info.customer_name,CUSTOMER_REFERANCE_INFO.referant_name
+from customer_info
+join CUSTOMER_REFERANCE_INFO on customer_info.customer_id = CUSTOMER_REFERANCE_INFO.customer_id;
+
+-- GET THE CUSTOMERES ID WHOSE REFERENT RELATION IS FATHER
+
+select customer_id,customer_name from customer_info where customer_info.customer_id in
+(
+select customer_id from CUSTOMER_REFERANCE_INFO where relation ='father');
+
+-- find the customer name start with 'S'
+
+select customer_name from customer_info where customer_name like 's%';
